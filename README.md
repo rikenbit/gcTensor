@@ -17,7 +17,7 @@ References
 ======
 [Generalised Coupled Tensor Factorisation, Y. Kenan Yilmaz, et. al., 2011, NIPS](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.230.6391&rep=rep1&type=pdf)
 
-[Link prediction in heterogeneous data via generalized coupled tensor factorization, Beyza Ermiş, 2013, Data Mining and Knowledge Discovery](https://link.springer.com/article/10.1007/s10618-013-0341-y)
+[Link prediction in heterogeneous data via generalized coupled tensor factorization, Beyza Ermiş, 2015, Data Mining and Knowledge Discovery](https://link.springer.com/article/10.1007/s10618-013-0341-y)
 
 ## License
 Copyright (c) 2019 Koki Tsuyuzaki and Laboratory for Bioinformatics Research, RIKEN Center for Biosystems Dynamics Reseach
