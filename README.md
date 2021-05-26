@@ -15,7 +15,7 @@ devtools::install_github("rikenbit/gcTensor")
 
 References
 ======
-[Generalised Coupled Tensor Factorisation, Y. Kenan Yilmaz, et. al., 2011, NIPS](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.230.6391&rep=rep1&type=pdf)
+[Generalised Coupled Tensor Factorisation, Y. Kenan Yilmaz, et. al., 2011, NIPS](https://papers.nips.cc/paper/4480-generalised-coupled-tensor-factorisation)
 
 [Link prediction in heterogeneous data via generalized coupled tensor factorization, Beyza Ermiş, 2015, Data Mining and Knowledge Discovery](https://link.springer.com/article/10.1007/s10618-013-0341-y)
 
