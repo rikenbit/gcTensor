@@ -1,5 +1,5 @@
 # gcTensor
-R package for Generalized Coupled Tensor Decomposition
+R package for Generalized Coupled Tensor Factorization
 
 Installation
 ======
@@ -20,7 +20,7 @@ References
 [Link prediction in heterogeneous data via generalized coupled tensor factorization, Beyza Ermiş, 2015, Data Mining and Knowledge Discovery](https://link.springer.com/article/10.1007/s10618-013-0341-y)
 
 ## License
-Copyright (c) 2019 Koki Tsuyuzaki and Laboratory for Bioinformatics Research, RIKEN Center for Biosystems Dynamics Reseach
+Copyright (c) 2021 Koki Tsuyuzaki and Laboratory for Bioinformatics Research, RIKEN Center for Biosystems Dynamics Reseach
 Released under the [Artistic License 2.0](http://www.perlfoundation.org/artistic_license_2_0).
 
 ## Authors
