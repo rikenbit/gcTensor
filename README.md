@@ -1,3 +1,13 @@
+[![DOI](https://zenodo.org/badge/168929267.svg)](https://zenodo.org/badge/latestdoi/168929267)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gcTensor)](
+https://cran.r-project.org/package=gcTensor)
+[![Downloads](https://cranlogs.r-pkg.org/badges/gcTensor)](https://CRAN.R-project.org/package=gcTensor)
+[![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/gcTensor?color=orange)](https://CRAN.R-project.org/package=gcTensor)
+[![:name status badge](https://rikenbit.r-universe.dev/badges/:name)](https://rikenbit.r-universe.dev)
+[![:registry status badge](https://rikenbit.r-universe.dev/badges/:registry)](https://rikenbit.r-universe.dev)
+[![:total status badge](https://rikenbit.r-universe.dev/badges/:total)](https://rikenbit.r-universe.dev)
+[![gcTensor status badge](https://rikenbit.r-universe.dev/badges/gcTensor)](https://rikenbit.r-universe.dev)
+
 # gcTensor
 R package for Generalized Coupled Tensor Factorization
 
