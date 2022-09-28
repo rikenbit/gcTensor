@@ -9,5 +9,5 @@ Suggests: testthat
 Depends: R (>= 4.1.0)
 Imports: rTensor, einsum
 Description: Multiple matrices/tensors can be specified and decomposed simultaneously by Probabilistic Latent Tensor Factorisation (PLTF). See the reference section of GitHub README.md <https://github.com/rikenbit/gcTensor>, for details of the method.
-License: Artistic-2.0
+License: MIT + file LICENSE
 URL: https://github.com/rikenbit/gcTensor
