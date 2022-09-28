@@ -7,6 +7,7 @@ https://cran.r-project.org/package=gcTensor)
 [![:registry status badge](https://rikenbit.r-universe.dev/badges/:registry)](https://rikenbit.r-universe.dev)
 [![:total status badge](https://rikenbit.r-universe.dev/badges/:total)](https://rikenbit.r-universe.dev)
 [![gcTensor status badge](https://rikenbit.r-universe.dev/badges/gcTensor)](https://rikenbit.r-universe.dev)
+![GitHub Actions](https://github.com/rikenbit/gcTensor/actions/workflows/build_test_push.yml/badge.svg)
 
 # gcTensor
 R package for Generalized Coupled Tensor Factorization
