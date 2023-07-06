@@ -15,7 +15,7 @@ expect_identical(is.list(out.Tucker_IS), TRUE)
 
 # Test O-2: Object Names
 objNames <- c("X", "Z", "R", "Ranks", "Beta", "num.iter",
-	"thr", "RecError", "RelChange")
+	"thr", "RecError", "TrainRecError", "TestRecError", "RelChange")
 
 # CP
 expect_identical(names(out.CP_EUC), objNames)
@@ -110,10 +110,26 @@ expect_identical(is.vector(out.CP_EUC$RecError), TRUE)
 expect_identical(is.vector(out.CP_KL$RecError), TRUE)
 expect_identical(is.vector(out.CP_IS$RecError), TRUE)
 
+expect_identical(is.vector(out.CP_EUC$TrainRecError), TRUE)
+expect_identical(is.vector(out.CP_KL$TrainRecError), TRUE)
+expect_identical(is.vector(out.CP_IS$TrainRecError), TRUE)
+
+expect_identical(is.vector(out.CP_EUC$TestRecError), TRUE)
+expect_identical(is.vector(out.CP_KL$TestRecError), TRUE)
+expect_identical(is.vector(out.CP_IS$TestRecError), TRUE)
+
 # Tucker
 expect_identical(is.vector(out.Tucker_EUC$RecError), TRUE)
 expect_identical(is.vector(out.Tucker_KL$RecError), TRUE)
 expect_identical(is.vector(out.Tucker_IS$RecError), TRUE)
+
+expect_identical(is.vector(out.Tucker_EUC$TrainRecError), TRUE)
+expect_identical(is.vector(out.Tucker_KL$TrainRecError), TRUE)
+expect_identical(is.vector(out.Tucker_IS$TrainRecError), TRUE)
+
+expect_identical(is.vector(out.Tucker_EUC$TestRecError), TRUE)
+expect_identical(is.vector(out.Tucker_KL$TestRecError), TRUE)
+expect_identical(is.vector(out.Tucker_IS$TestRecError), TRUE)
 
 # Test O-11: RelChange
 # CP

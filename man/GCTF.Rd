@@ -10,7 +10,7 @@ The input data is assumed to be a list containing multiple matrices.
 GCTF decomposes N matrices (Xs) to M low-dimensional factor matices (Zs).
 }
 \usage{
-GCTF(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
+GCTF(X, R, M=NULL, pseudocount=.Machine$double.eps, initZ=NULL, fix=NULL, Ranks, Beta=1,
     num.iter=30, thr=1E-10, verbose=FALSE)
 }
 
@@ -23,6 +23,9 @@ Coupling matrix which has N-rows and M-columns. N is the number of data matrices
 }
 \item{M}{
 A list containing N mask matrices. If in n-th data matrix, i-th row/j-th column is missing value, 0 is filled, otherwise 0. Default value is NULL, which means all the values are filled with 1 (No missing value).
+}
+\item{pseudocount}{
+The pseudo count to avoid zero division, when the element is zero (Default: Machine Epsilon).
 }
 \item{initZ}{
 A M-length list, which is the initial values of factor matrix Z. If not specified, random matrices are generated and used (Default: NULL).
@@ -55,6 +58,10 @@ If verbose == TRUE, Error change rate is generated in console window (Default: F
   J : The number of dimension (J < {N, M}).
   RecError : The reconstruction error between data tensor and reconstructed
   tensor from U and V.
+  TrainRecError : The reconstruction error calculated by training set
+  (observed values specified by M).
+  TestRecError : The reconstruction error calculated by test set
+  (missing values specified by M).
   TrainRecError : The reconstruction error calculated by training set
   (observed values specified by M).
   TestRecError : The reconstruction error calculated by test set

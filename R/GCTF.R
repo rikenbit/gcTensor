@@ -1,19 +1,24 @@
-GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
+GCTF <- function(X, R, M=NULL, pseudocount=.Machine$double.eps, initZ=NULL, fix=NULL, Ranks, Beta=1,
     num.iter=30, thr=1E-10, verbose=FALSE){
     ######################################
     # Argument Check
     ######################################
-    .checkGCTF(X, R, Ranks, Beta, num.iter, thr)
+    .checkGCTF(X, R, M, pseudocount, initZ, fix, Ranks, Beta, num.iter, thr, verbose)
     ######################################
     # Setting
     ######################################
-    int <- .initGCTF(X, R, M, initZ, fix, Ranks, thr)
+    int <- .initGCTF(X, R, M, pseudocount, initZ, fix, Ranks, thr)
+    X <- int$X
     M <- int$M
+    pM <- int$pM
+    M_NA <- int$M_NA
     Z <- int$Z
     fix <- int$fix
     visibleIdxs <- int$visibleIdxs
     latentIdxs <- int$latentIdxs
     RecError <- int$RecError
+    TrainRecError <- int$TrainRecError
+    TestRecError <- int$TestRecError
     RelChange <- int$RelChange
     X_bar <- int$X_bar
     ######################################
@@ -33,6 +38,8 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
       # After Update
       iter <- iter + 1
       RecError[iter] <- .recError(X, X_bar)
+      TrainRecError[iter] <- .recError(X, X_bar, M_NA, M, "train")
+      TestRecError[iter] <- .recError(X, X_bar, M_NA, M, "test")
       RelChange[iter] <- .relChange(iter, RecError)
       # Verbose
       if(verbose){
@@ -44,15 +51,35 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
     # Output
     list(X=X, Z=Z, R=R, Ranks=Ranks, Beta=Beta,
         num.iter=num.iter, thr=thr,
-        RecError=RecError, RelChange=RelChange)
+        RecError=RecError, TrainRecError=TrainRecError,
+        TestRecError=TestRecError, RelChange=RelChange)
 }
 
 # Argument Check Functions
-.checkGCTF <- function(X, R, Ranks, Beta, num.iter, thr){
+.checkGCTF <- function(X, R, M, pseudocount, initZ, fix, Ranks, Beta, num.iter, thr, verbose){
     # Sign
     .checkSign(X)
+    # Mask
+    if(!is.null(M)){
+        if(!identical(lapply(X, dim), lapply(M, dim))){
+           stop("Dimension of Mask tensor M must be the same as that of X")
+        }
+    }
     # Common Name
     .checkCommonName(X, R, Ranks)
+    # pseudocount
+    stopifnot(is.numeric(pseudocount))
+    # InitZ
+    checkInitZ <- all(unlist(lapply(seq_along(initZ), function(x){
+      identical(as.integer(dim(initZ[[x]])),
+                as.integer(unlist(Ranks[[x]])))})))
+    if(!checkInitZ){
+        stop("The size of initZ must be same as the way Ranks specified")
+    }
+    # fix
+    if(!is.null(fix)){
+        stopifnot(is.logical(fix))
+    }
     # Beta
     .checkBeta(Beta)
     # Number of iteration
@@ -61,6 +88,8 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
     .checkthr(thr)
     # Ranks
     .checkRanks(X, R, Ranks)
+    # verbose
+    stopifnot(is.logical(verbose))
 }
 
 .checkSign <- function(X){
@@ -115,11 +144,24 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
     })
 }
 
-
 # Initialization
-.initGCTF <- function(X, R, M, initZ, fix, Ranks, thr){
-    # Size of X and M
-    M <- .initM(X, M)
+.initGCTF <- function(X, R, M, pseudocount, initZ, fix, Ranks, thr){
+    # NA mask
+    M_NA <- X
+    for(i in seq_along(M_NA)){
+        M_NA[[i]][] <- 1
+        M_NA[[i]][which(is.na(X[[i]]))] <- 0
+    }
+    if(is.null(M)){
+        M <- M_NA
+    }
+    pM <- M
+    # Pseudo count
+    for(i in seq_along(X)){
+        X[[i]][which(is.na(X[[i]]))] <- pseudocount
+        X[[i]][which(X[[i]] == 0)] <- pseudocount
+        pM[[i]][which(pM[[i]] == 0)] <- pseudocount
+    }
     # Initial Latent Indices
     Z <- .initInitZ(X, R, Ranks, initZ)
     # If fix is not set, all Z may be changed
@@ -132,30 +174,21 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
     latentIdxs <- .latentIdxs(Ranks, Z, visibleIdxs)
     # Reconstruction Error
     RecError = c()
+    # Reconstruction Error (Training Data)
+    TrainRecError = c()
+    # Reconstruction Error (Test Data)
+    TestRecError = c()
     # Relative Change
     RelChange = c()
     # Reconstructed Tensor
     X_bar <- .recTensor(X, Z, R, Ranks, latentIdxs)
     # First iteration
-    RecError[1] <- .recError(X, X_bar)
+    RecError[1] <- thr * 10
+    TrainRecError[1] <- thr * 10
+    TestRecError[1] <- thr * 10
     RelChange[1] <- thr * 10
-    list(M=M, Z=Z, fix=fix, visibleIdxs=visibleIdxs, latentIdxs=latentIdxs,
-        RecError=RecError, RelChange=RelChange, X_bar=X_bar)
-}
-
-# Initialization of Mask Matrices
-.initM <- function(X, M){
-    if(!is.null(M)){
-        if(!identical(lapply(X, dim), lapply(M, dim))){
-           stop("Dimension of Mask tensor M must be the same as that of X")
-        }
-    }else{
-        M <- X
-        for(i in seq_along(M)){
-            M[[i]][] <- 1
-        }
-    }
-    M
+    list(X=X, M=M, pM=pM, M_NA=M_NA, Z=Z, fix=fix, visibleIdxs=visibleIdxs, latentIdxs=latentIdxs,
+        RecError=RecError, TrainRecError=TrainRecError, TestRecError=TestRecError, RelChange=RelChange, X_bar=X_bar)
 }
 
 # Initialization of Factor Matrices
@@ -163,15 +196,7 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
     if(is.null(initZ)){
         Z <- .genLatentVals(X, R, Ranks)
     }else{
-        checkInitZ <- all(unlist(lapply(seq_along(initZ), function(x){
-          identical(as.integer(dim(initZ[[x]])),
-                    as.integer(unlist(Ranks[[x]])))
-        })))
-        if(!checkInitZ){
-            stop("The size of initZ must be same as the way Ranks specified")
-        }else{
-          Z <- initZ
-        }
+        Z <- initZ
     }
     Z
 }
@@ -294,11 +319,25 @@ GCTF <- function(X, R, M=NULL, initZ=NULL, fix=NULL, Ranks, Beta=1,
 }
 
 # Reconstruction Error
-.recError <- function(X, X_bar){
-    v <- unlist(lapply(seq_len(length(X)), function(x){
-       X[[x]] - X_bar[[x]]
-    }))
-    sqrt(sum(v * v))
+.recError <- function(X, X_bar, M_NA=NULL, M=NULL,
+    type=c("train", "test")){
+    if(is.null(M_NA)){
+        v <- unlist(lapply(seq_len(length(X)), function(x){
+            X[[x]] - X_bar[[x]]
+        }))
+    }else{
+        if(type == "train"){
+            v <- unlist(lapply(seq_len(length(X)), function(x){
+                (1 - M_NA[[x]] + M[[x]]) * X[[x]] - (1 - M_NA[[x]] + M[[x]]) * X_bar[[x]]
+            }))
+        }
+        if(type == "test"){
+            v <- unlist(lapply(seq_len(length(X)), function(x){
+                (M_NA[[x]] - M[[x]]) * X[[x]] - (M_NA[[x]] - M[[x]]) * X_bar[[x]]
+            }))
+        }
+    }
+    sqrt(sum(v * v, na.rm=TRUE))
 }
 
 # Reconstructed Tensor

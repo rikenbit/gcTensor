@@ -1,8 +1,7 @@
 Package: gcTensor
 Type: Package
 Title: Generalized Coupled Tensor Factorization
-Version: 0.99.0
-Date: 2021-08-24
+Version: 1.0.0
 Authors@R: c(person("Koki", "Tsuyuzaki", role = c("aut", "cre"),
                       email = "k.t.the-answer@hotmail.co.jp"))
 Suggests: testthat

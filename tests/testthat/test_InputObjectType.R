@@ -4,7 +4,7 @@
 
 # Test I-1: Object Names
 expect_identical(names(formals(GCTF)),
-    c("X", "R", "M", "initZ", "fix", "Ranks", "Beta", "num.iter", "thr", "verbose"))
+    c("X", "R", "M", "pseudocount", "initZ", "fix", "Ranks", "Beta", "num.iter", "thr", "verbose"))
 
 # Test I-2: X
 expect_identical(as.character(formals(GCTF)$X), "")
@@ -14,6 +14,9 @@ expect_identical(as.character(formals(GCTF)$R), "")
 
 # Test I-4: M
 expect_identical(formals(GCTF)$M, NULL)
+
+# Test
+expect_identical(eval(formals(GCTF)$pseudocount), .Machine$double.eps)
 
 # Test I-5: initZ
 expect_identical(formals(GCTF)$initZ, NULL)

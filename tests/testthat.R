@@ -5,8 +5,6 @@ library("testthat")
 
 options(testthat.use_colours = FALSE)
 
-# source("../R/GCTF.R") # comment out
-
 source("testthat/setting.R")
 test_file("testthat/test_InputObjectType.R")
 test_file("testthat/test_OutputObjectType.R")
